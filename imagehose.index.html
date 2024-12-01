@@ -1,0 +1,106 @@
+{{{HEADER}}}
+
+<title>🖼️THE IMAGEHOSE🚰</title>
+
+<style>
+  #headerDiv {
+    margin: 0 0 2em 1em;
+  }
+
+  .post {
+    width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0.5em;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3em;
+  }
+
+  .img-div img {
+    margin-top: 1em;
+  }
+
+  .quote-div {
+    padding-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .attr-div {
+    padding-top: 0.5em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3em;
+  }
+
+  img {
+    width: 480px;
+    border-radius: 0.3em;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  }
+
+  @media screen and (max-width: 720px) {
+    img {
+      width: 420px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    img {
+      width: 320px;
+    }
+
+    .post {
+      width: 100%;
+    }
+
+    .post {
+      width: 100%;
+    }
+  }
+</style>
+
+</head>
+
+<body>
+  <h1>🖼️ THE IMAGEHOSE 🚰</h1>
+  <div id="headerDiv">
+    Sampled from the
+    <a href="https://docs.bsky.app/docs/advanced-guides/firehose" target="_blank">
+      Bluesky 🔥firehose🚰
+    </a>
+    via <a href="https://www.npmjs.com/package/sentiment" target="_blank">sentiment</a>
+    <a href="https://www.npmjs.com/package/node-nlp" target="_blank">analysis</a>.<br />
+    Images generated from post text with
+    <a href="{{{modelUrl}}}" target="_blank">{{modelName}}</a>.<br />
+    <br/>
+    Retaining the most recent {{windowCount}}. Updated every {{currentDelayS}}ish seconds.
+    <br />
+    <a href="/stats.html">Statistics</a>.
+    <a href="https://github.com/rpj/imagehose/" target="_blank">Code</a>.
+    By <a href="https://bsky.app/profile/ryanjoseph.dev" target="_blank">@ryanjoseph.dev</a>.<br />
+    Feed: <a href="https://piehost.com/websocket-tester?url=wss://wss.imagehose.net" target="_blank"><code>wss://wss.imagehose.net</code></a><br />
+    <br/>
+    None of these people or places exist. None of these images are real.
+    <br/>
+  </div>
+  {{#posts}}
+  <div class="post">
+    <div class="img-div">
+      <a href="{{{postUrl}}}" target="_blank">
+        <img src="/{{imagePath}}" />
+      </a>
+    </div>
+    <div class="quote-div">
+      &ldquo;<quote>{{text}}</quote>&rdquo;<br />
+    </div>
+    <div class="attr-div">
+      &mdash; <a href="{{{postUrl}}}" target="_blank">{{aka}}</a> at {{createdAtUtcString}}
+    </div>
+  </div>
+  {{/posts}}
+
+  <hr />
+  Updated: {{updateTs}}
+</body>
+
+</html>

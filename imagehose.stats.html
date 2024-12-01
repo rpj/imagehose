@@ -1,0 +1,166 @@
+{{{HEADER}}}
+
+<title>🖼️THE IMAGEHOSE🚰 Statistics</title>
+
+<style>
+  table,
+  tr {
+    border: 1px solid #6A5ACD;
+  }
+
+  td {
+    padding: 0.4em;
+  }
+
+  table {
+    margin-top: 1.0em;
+    margin-bottom: 1.0em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  thead {
+    color: #F0E68C;
+    background-color: #8A2BE2;
+  }
+</style>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  const plotConfig = {
+    displayModeBar: false,
+    scrollZoom: false,
+    responsive: true,
+  };
+
+  const newLayout = (titleText) => ({
+    title: {
+      text: titleText,
+      font: {
+          family: '"Times New Roman"',
+      }
+    },
+    plot_bgcolor: '#F0E68C',
+    paper_bgcolor: '#B0E0E6',
+    colorway: ['#8A2BE2', '#6A5ACD'],
+    xaxis: {
+      ticks: "",
+      showticklabels: false
+    },
+    hoverlabel: {
+      font: { 
+        family: '"Times New Roman"',
+      }
+    },
+    legend: {
+      xanchor: 'right',
+      yanchor: 'bottom',
+      xref: 'paper',
+      yref: 'paper',
+      x: 0.115,
+      y: 0.81,
+      font: { 
+        family: '"Times New Roman"',
+      }
+    },
+    yaxis: {
+      tickcolor: '#8A2BE2',
+      tickfont: {
+        family: '"Times New Roman"',
+        color: '#8A2BE2'
+      },
+      //type: 'log',
+    },
+  });
+
+  function newPlot(divId, title, xName, y1Data, y2Data) {
+    return Plotly.newPlot(divId, 
+      [
+        {
+          y: y1Data,
+          x,
+          mode: 'lines+markers',
+          type: 'scatter',
+          name: xName,
+        },
+        {
+          y: y2Data,
+          x,
+          mode: 'lines+markers',
+          type: 'scatter',
+          name: '{{PLOT_AVERAGES_X_MIN}}min average',
+        }
+      ], newLayout(title), plotConfig);
+  }
+
+  const x = [{{ STATS.EPM_SAMPLES.TS }}].map((dn) => new Date(dn).toISOString());
+  document.addEventListener('DOMContentLoaded', function () {
+    if (x.length < 5) {
+      return;
+    }
+
+    newPlot(
+      'epsPlot',
+      'Firehose events per second',
+      'events/second',
+      [{{ STATS.EPM_SAMPLES.DATA }}],
+      [{{ STATS.EPM_SAMPLES.ADATA }}]
+    );
+      
+    newPlot(
+      'candPlot',
+      '# of candidate posts after filtering',
+      'candidates',
+      [{{ STATS.EPM_SAMPLES.CANDIDATES }}],
+      [{{ STATS.EPM_SAMPLES.ACAND }}]
+    );
+      
+    newPlot(
+      'igtPlot',
+      'Image generation time, milliseconds',
+      'gentime',
+      [{{ STATS.EPM_SAMPLES.IGT }}],
+      [{{ STATS.EPM_SAMPLES.AIGT }}]
+    );
+  });
+</script>
+</head>
+
+<body>
+  <h1>🖼️ <a href="/">THE IMAGEHOSE</a> 🚰 Statistics 📈📊📉</h1>
+
+  <h4 style="font-style: italic;">Data spans the last {{statsDataFromLastHrs}} &amp;
+     is sampled at each image generation (every {{currentDelayS}}ish seconds).</h4>
+
+  <div id="epsPlot"></div>
+
+  <div style="margin-right: auto; margin-left: auto;">
+    <b>{{STATS.TOTAL_EVENTS}}</b> total firehose events (<b>~{{eventsPerSecond}}/second</b>) have been filtered for the
+    following:
+    <table>
+      <thead>
+        <td>Filter</td>
+        <td>%</td>
+        <td>#</td>
+      </thead>
+      {{#filterReasons}}
+      <tr>
+        <td>{{name}}</td>
+        <td><b>{{percentage}}%</b></td>
+        <td>{{value}}</td>
+      </tr>
+      {{/filterReasons}}
+    </table>
+  </div>
+
+  <div id="candPlot"></div>
+
+  <hr />
+
+  <div id="igtPlot"></div>
+
+  <hr />
+  Updated: {{updateTs}}
+</body>
+
+</html>
